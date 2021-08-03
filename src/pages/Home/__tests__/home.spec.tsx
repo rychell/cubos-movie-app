@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react"
-import { HomePage } from "./index"
+import { HomePage } from "../index"
 
 describe("Home page", () => {
     it('Renders correctly', () => {
