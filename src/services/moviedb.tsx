@@ -14,5 +14,8 @@ const getMovieInfo = async (id: string) => {
     const response = await axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=5fd66233028ef25d9eef12acca027cd1&language=pt-BR`)
     return response.data
 }
-
-export {getMovieList, getGenreList, getMovieInfo}
+const searchMovies = async (query: string) =>{
+    const response = await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=5fd66233028ef25d9eef12acca027cd1&language=pt-BR&query=${query}&page=1&include_adult=false`)
+    return response.data.results
+}
+export {getMovieList, getGenreList, getMovieInfo, searchMovies}
