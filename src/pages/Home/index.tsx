@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { IMovie } from '../../@types/IMovie'
 import { MovieCard } from '../../components/MovieCard'
+import { useMoviedb } from '../../hooks/useMoviedb'
 import { getMovieList } from '../../services/moviedb'
 import styles from './styles.module.css'
 
 const HomePage = () => {
+    const { getGenreName } = useMoviedb()
+
     const [movieList, setMovieList] = useState<IMovie[]>([] as IMovie[])
 
     const updateMovieList = async () => {
@@ -16,7 +19,12 @@ const HomePage = () => {
             releasedAt: new Date(movie.release_date),
             rating: movie.vote_average,
             description: movie.overview,
-            genres: movie.genre_ids.map((genre: string, index: number) => ({ id: index, name: genre }))
+            genres: movie.genre_ids.map((genre: number, index: number) => (
+                { 
+                    id: genre, 
+                    name: getGenreName(genre) 
+                }
+            ))
         }))
 
         setMovieList(movieListFormatted)
