@@ -1,3 +1,4 @@
+import { useHistory, useLocation } from 'react-router-dom'
 import { usePagination } from '../../hooks/usePagination'
 import styles from './styles.module.css'
 
@@ -8,7 +9,8 @@ interface IPaginationProps {
 
 const Pagitionation = ({ totalPages = 5, maxPage = 10 }: IPaginationProps) => {
     const { currentPage, setCurrentPage } = usePagination()
-
+    const { pathname } = useLocation()
+    const history = useHistory()
     const pageGenerator = (elem: any, index: number) => {
         if (currentPage + totalPages > maxPage + 1) {
             return maxPage - (totalPages - index - 1)
@@ -22,6 +24,7 @@ const Pagitionation = ({ totalPages = 5, maxPage = 10 }: IPaginationProps) => {
 
     }
     const handleClick = (page: number) => {
+        history.push(`${pathname}?page=${page}`)
         setCurrentPage(page)
     }
 
