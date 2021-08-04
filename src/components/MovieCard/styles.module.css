@@ -20,11 +20,17 @@
     color: #03CDD4;
     height: 80px;
     position: relative;
+    
 }
 .wrapper .movieDetails header h2{
     font-size: 40px;
     margin-left: 130px;
-    transform: translateY(30px);
+    display: block;
+    transform: translateY(26px);
+    width: 710px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .wrapper .movieDetails header .releasedDate{
     margin-left: 130px;
