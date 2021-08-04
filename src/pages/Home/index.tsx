@@ -13,30 +13,30 @@ const HomePage = () => {
             id: movie.id,
             cover: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
             title: movie.title,
-            releasedAt: movie.release_date,
+            releasedAt: new Date(movie.release_date),
             rating: movie.vote_average,
             description: movie.overview,
-            genres: movie.genre_ids.map((genre: string, index: number)=>({id: index, name: genre}))
+            genres: movie.genre_ids.map((genre: string, index: number) => ({ id: index, name: genre }))
         }))
-        
+
         setMovieList(movieListFormatted)
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         updateMovieList()
     }, [])
     return (
-        <>
+        <div className={styles.wrapper}>
             <header>
                 <h1 data-testid="title">Movies</h1>
             </header>
             <main>
                 <input type="text" data-testid="search-input" placeholder="Busque um filme por nome, ano ou gênero" />
-                <div className="movies">
+                <div className="movies" data-testid="movie-list">
                     {movieList.map(movie => <MovieCard key={movie.id} {...movie} />)}
                 </div>
             </main>
-        </>
+        </div>
     )
 }
 
