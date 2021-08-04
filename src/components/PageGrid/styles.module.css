@@ -1,0 +1,21 @@
+.wrapper {
+    margin: 0 auto;
+}
+.wrapper > header{
+    background: #116193;
+    text-align: center;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.wrapper > header .title{
+    cursor: pointer;
+    color: #03CDD4;
+    font-size: 42px;
+    font-weight: normal;
+}
+.wrapper > main {
+    max-width: 1100px;
+    margin: 0 auto;
+}
