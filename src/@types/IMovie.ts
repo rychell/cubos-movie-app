@@ -3,7 +3,7 @@ export interface IMovie {
     id: string
     cover: string
     title: string
-    releasedAt: string
+    releasedAt: Date
     rating: number
     description: string
     genres: IGenre[]
