@@ -1,24 +1,36 @@
 import { ChangeEvent, useEffect, useState } from 'react'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import { IMovie } from '../../@types/IMovie'
 import { MovieCard } from '../../components/MovieCard'
+import { PageGrid } from '../../components/PageGrid'
 import { Pagitionation } from '../../components/Pagination'
 import { useMoviedb } from '../../hooks/useMoviedb'
-import { PaginationProvider, usePagination } from '../../hooks/usePagination'
+import { usePagination } from '../../hooks/usePagination'
 import { getMovieList, searchMovies } from '../../services/moviedb'
 import styles from './styles.module.css'
 
+interface ISearchParams {
+    terms: string
+}
+
 const HomePage = () => {
     let timer: any;
+    const { getGenreName } = useMoviedb()
+    const { currentPage, setCurrentPage, maxPage, setMaxPage } = usePagination()
+    const { search } = useLocation()
+    
+    const queryString = new URLSearchParams(search)
+    setCurrentPage(parseInt(queryString.get("page") as string) || 1)
+
     const [movieList, setMovieList] = useState<IMovie[]>([] as IMovie[])
     const [searchQuery, setSearchQuery] = useState<string>('')
 
-    const { getGenreName } = useMoviedb()
-    const { currentPage, setCurrentPage, maxPage, setMaxPage } = usePagination()
 
     const handleInputSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         clearTimeout(timer)
         timer = setTimeout(() => {
-            setSearchQuery(e.target.value)
+            const query = e.target.value
+            setSearchQuery(query)
             setCurrentPage(1)
         }, 350)
     }
@@ -34,7 +46,7 @@ const HomePage = () => {
         }
         const movieListFormatted = formatMovieList(movieListRaw.results)
         const pagesAvailable = movieListRaw.total_pages || 1
-        
+
         setMaxPage(pagesAvailable)
         setMovieList(movieListFormatted)
     }
@@ -52,10 +64,14 @@ const HomePage = () => {
                     id: genre,
                     name: getGenreName(genre)
                 }
-            ))
+            )),
+            revenue: movie.revenue,
+            budget: movie.budget,
+            runtime: movie.runtime,
+            status: movie.status,
+            spoken_languages: movie.spoken_languages && movie.spoken_languages.map((language: any) => language.name)
         }))
     }
-
 
     useEffect(() => {
         updateMovieList()
@@ -65,18 +81,20 @@ const HomePage = () => {
     }, [searchQuery, currentPage])
 
     return (
-        <div className={styles.wrapper}>
-            <header>
-                <h1 data-testid="title">Movies</h1>
-            </header>
-            <main>
-                <input type="text" onChange={handleInputSearchChange} data-testid="search-input" placeholder="Busque um filme por nome, ano ou gênero" />
-                <div className="movies" data-testid="movie-list">
-                    {movieList.map(movie => <MovieCard key={movie.id} {...movie} />)}
-                </div>
-                <Pagitionation maxPage={maxPage} />
-            </main>
-        </div>
+        <PageGrid title="Movies">
+            <input
+                type="text"
+                className={styles.searchInput}
+                onChange={handleInputSearchChange}
+                data-testid="search-input"
+                placeholder="Busque um filme por nome, ano ou gênero"
+            />
+            <div className="movies" data-testid="movie-list">
+                {movieList.map(movie => <MovieCard key={movie.id} {...movie} />)}
+            </div>
+            <Pagitionation maxPage={maxPage} />
+        </PageGrid>
+
     )
 }
 
