@@ -1,7 +1,9 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { IMovie } from '../../@types/IMovie'
 import { MovieCard } from '../../components/MovieCard'
+import { Pagitionation } from '../../components/Pagination'
 import { useMoviedb } from '../../hooks/useMoviedb'
+import { PaginationProvider, usePagination } from '../../hooks/usePagination'
 import { getMovieList, searchMovies } from '../../services/moviedb'
 import styles from './styles.module.css'
 
@@ -9,25 +11,31 @@ const HomePage = () => {
     let timer: any;
     const [movieList, setMovieList] = useState<IMovie[]>([] as IMovie[])
     const [searchQuery, setSearchQuery] = useState<string>('')
-    
+
     const { getGenreName } = useMoviedb()
-    
+    const { currentPage, setCurrentPage, maxPage, setMaxPage } = usePagination()
+
     const handleInputSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         clearTimeout(timer)
-        timer = setTimeout(() => { setSearchQuery(e.target.value) }, 350)
+        timer = setTimeout(() => {
+            setSearchQuery(e.target.value)
+            setCurrentPage(1)
+        }, 350)
     }
-    
+
     const updateMovieList = async () => {
         let movieListRaw: any
 
         if (searchQuery) {
-            movieListRaw = await searchMovies(searchQuery)
+            movieListRaw = await searchMovies(searchQuery, currentPage)
         }
         else {
-            movieListRaw = await getMovieList()
+            movieListRaw = await getMovieList(currentPage)
         }
-        const movieListFormatted = formatMovieList(movieListRaw)
-
+        const movieListFormatted = formatMovieList(movieListRaw.results)
+        const pagesAvailable = movieListRaw.total_pages || 1
+        
+        setMaxPage(pagesAvailable)
         setMovieList(movieListFormatted)
     }
 
@@ -54,7 +62,7 @@ const HomePage = () => {
     }, [])
     useEffect(() => {
         updateMovieList()
-    }, [searchQuery])
+    }, [searchQuery, currentPage])
 
     return (
         <div className={styles.wrapper}>
@@ -66,6 +74,7 @@ const HomePage = () => {
                 <div className="movies" data-testid="movie-list">
                     {movieList.map(movie => <MovieCard key={movie.id} {...movie} />)}
                 </div>
+                <Pagitionation maxPage={maxPage} />
             </main>
         </div>
     )

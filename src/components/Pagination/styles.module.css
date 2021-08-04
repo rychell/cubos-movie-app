@@ -1,0 +1,40 @@
+.paginator{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+.paginator li {
+    color: #4B88AD;
+    font-size: 20px;
+    cursor: pointer;
+}
+.paginator li + li {
+    margin-left: 20px;
+}
+.paginator li.active{
+    display: flex;
+    background: #116193;
+    color: #03CDD4;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    font-size: 24x;
+}
+.paginator li.active::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 3px solid #03CDD4;
+    background: transparent;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+}

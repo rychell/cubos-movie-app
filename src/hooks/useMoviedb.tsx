@@ -22,8 +22,13 @@ const MoviedbProvider = ({ children }: IMoviedbProvider) => {
     const getGenreName = (id: number) => {
         return genres.find(genre => genre.id === id)?.name || id.toString()
     }
+    const provider = { 
+        genres, 
+        setGenres, 
+        getGenreName, 
+    }
     return (
-        <MoviedbContext.Provider value={{ genres, setGenres, getGenreName }}>
+        <MoviedbContext.Provider value={provider}>
             {children}
         </MoviedbContext.Provider>
     )
