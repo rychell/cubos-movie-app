@@ -7,5 +7,10 @@ export interface IMovie {
     rating: number
     description: string
     genres: IGenre[]
+    revenue: number
+    budget: number,
+    runtime: number
+    status: string
+    spoken_languages: string[]
 }
 
