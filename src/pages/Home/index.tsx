@@ -84,6 +84,7 @@ const HomePage = () => {
     useEffect(() => {
         updateMovieList()
         setCurrentPage(parseInt(queryString.get("page") as string) || 1)
+        document.title = 'The Movie App'
     }, [])
     useEffect(() => {
         updateMovieList()

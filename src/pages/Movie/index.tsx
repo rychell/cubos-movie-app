@@ -36,6 +36,10 @@ const MoviePage = () => {
     useEffect(() => {
         fetchMovieData()
     }, [])
+    
+    useEffect(() => {
+        document.title = movie.title ? `${movie.title} - The Movie App` : 'The Movie App'
+    }, [movie])
     return (
         <PageGrid title="Movies">
             {movie.id ? (
