@@ -50,11 +50,13 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 40px;
+    flex-wrap: wrap;
 }
 .movie main .details .statistics div{
     display: flex;
     flex-direction: column;
     text-align: center;
+    flex-wrap: wrap;
 }
 .movie main .details .statistics div h3{
     color: #116193;
@@ -72,10 +74,8 @@
     justify-content: center;
     align-items: center;
     font-size: 30px;
-    left: 620px;
-    bottom: 20px;
-    margin-left:  20px;
-
+    left: 85%;
+    bottom: 10%;
 }
 .movie main .details .rating::before {
     content: '';
