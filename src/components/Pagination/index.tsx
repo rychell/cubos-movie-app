@@ -33,6 +33,7 @@ const Pagitionation = ({ totalPages = 5, maxPage = 10 }: IPaginationProps) => {
         <ul className={styles.paginator}>
             {pages.map((page) => (
                 <li
+                    key={page}
                     className={page === currentPage ? styles.active : ''}
                     onClick={() => { handleClick(page) }}
                 >

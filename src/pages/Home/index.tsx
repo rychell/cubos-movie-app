@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react'
-import { useHistory, useLocation, useParams } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { IMovie } from '../../@types/IMovie'
 import { MovieCard } from '../../components/MovieCard'
 import { PageGrid } from '../../components/PageGrid'
@@ -9,22 +9,21 @@ import { usePagination } from '../../hooks/usePagination'
 import { getMovieList, searchMovies } from '../../services/moviedb'
 import styles from './styles.module.css'
 
-interface ISearchParams {
-    terms: string
-}
+const PAGE_SIZE = 5
+const PAGE_SIZE_API = 20
 
 const HomePage = () => {
     let timer: any;
     const { getGenreName } = useMoviedb()
     const { currentPage, setCurrentPage, maxPage, setMaxPage } = usePagination()
     const { search } = useLocation()
-    
-    const queryString = new URLSearchParams(search)
-    setCurrentPage(parseInt(queryString.get("page") as string) || 1)
+    const history = useHistory()
 
     const [movieList, setMovieList] = useState<IMovie[]>([] as IMovie[])
     const [searchQuery, setSearchQuery] = useState<string>('')
 
+    const queryString = new URLSearchParams(search)
+    
 
     const handleInputSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
         clearTimeout(timer)
@@ -32,20 +31,29 @@ const HomePage = () => {
             const query = e.target.value
             setSearchQuery(query)
             setCurrentPage(1)
-        }, 350)
+            history.push(`/`)
+        }, 500)
     }
 
     const updateMovieList = async () => {
         let movieListRaw: any
 
+        const pageNumberCatalog = Math.trunc(currentPage / PAGE_SIZE + 1)
+
         if (searchQuery) {
-            movieListRaw = await searchMovies(searchQuery, currentPage)
+            movieListRaw = await searchMovies(searchQuery, pageNumberCatalog)
         }
         else {
-            movieListRaw = await getMovieList(currentPage)
+            movieListRaw = await getMovieList(pageNumberCatalog)
         }
+
+        const sliceIndexBegin = ((currentPage - 1) % (PAGE_SIZE_API / PAGE_SIZE)) * PAGE_SIZE
+        const sliceIndexEnd = sliceIndexBegin + PAGE_SIZE
+
+        movieListRaw.results = movieListRaw.results.slice(sliceIndexBegin, sliceIndexEnd)
+
         const movieListFormatted = formatMovieList(movieListRaw.results)
-        const pagesAvailable = movieListRaw.total_pages || 1
+        const pagesAvailable = Math.ceil(movieListRaw.total_results / PAGE_SIZE) || 1
 
         setMaxPage(pagesAvailable)
         setMovieList(movieListFormatted)
@@ -75,6 +83,7 @@ const HomePage = () => {
 
     useEffect(() => {
         updateMovieList()
+        setCurrentPage(parseInt(queryString.get("page") as string) || 1)
     }, [])
     useEffect(() => {
         updateMovieList()
@@ -94,7 +103,6 @@ const HomePage = () => {
             </div>
             <Pagitionation maxPage={maxPage} />
         </PageGrid>
-
     )
 }
 
