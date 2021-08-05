@@ -23,6 +23,7 @@ Lembrando que para executar os comandos acima é necessário ter o NodeJS instal
 * Caso a busca esteja vazia, são exibidos os filmes mais populares do momento.
 * Utilizei a Context API do React para compartilhar informações e estados entre componentes.
 * Por ser um projeto pequeno, optei por utilizar css modules. Sass ou até mesmo styled-components seria aplicável, mas para esse escopo não traria vantagens.
+* Título das páginas dinâmicos de acordo com o conteúdo sendo exibido.
 
 
 ## Principais desafios
